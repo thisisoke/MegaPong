@@ -7,6 +7,8 @@
  });
  
  let socketColor = {};
+
+ let password = '6478019678';
  
  function setup(){
    createCanvas(windowWidth, windowHeight);
@@ -25,6 +27,8 @@
  }
  
  function draw(){
+
+
  
  }
  
@@ -32,9 +36,10 @@
    // ellipse(mouseX, mouseY, 30, 30);
    let bag ={
      mX: mouseX,
-     mY: mouseY,
-     sColor: socketColor
+     mY: mouseY,  
+     sColor: socketColor,
+     pwd: password
    }
    socket.emit('dragTo', bag);
-   console.log(bag);
+   //console.log(bag);
  }

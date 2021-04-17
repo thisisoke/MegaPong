@@ -1,3 +1,11 @@
+//open and connect the input socket
+let socket = io('/pong');
+
+//listen for the confirmation of connection 
+socket.on('connect', function(){
+  console.log('now connected to pong server');
+});
+
 var barX = 50;
 var barY = 200;
 
@@ -17,6 +25,14 @@ function setup() {
   rectMode(CORNER);
   ellipseMode(CENTER);
   fill(255);
+
+  socket.on('ballPos', function(v){
+  
+  //rect(barX, barY, 4,60);
+  ballXpos = v.ballX;
+  ballYpos= v.ballY;
+   //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
+  });
 }
 
 function draw() {
@@ -43,12 +59,19 @@ function draw() {
   }else{
     xSpeed = 0;
   }
-  rect(barX, barY, 4,60);
+  //rect(barX, barY, 4,60);
   ellipse(ballXpos, ballYpos, 10, 10);
   hit = collideRectCircle(barX,barY,4,60,ballXpos,ballYpos,10);
   if(hit == true){
     ballXspeed = -ballXspeed;
   }
+
+  let newBallPos = {
+     ballX : ballXpos,
+     ballY : ballYpos
+  }
+
+  socket.emit('ballPos', newBallPos);
 }
 
 

@@ -1,3 +1,4 @@
+//might change to /watch
 //open and connect the input socket
 let socket = io('/output');
 
