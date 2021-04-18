@@ -59,6 +59,20 @@ function setup() {
   buttonLeft.position(windowWidth - 200, 100);
   buttonLeft.style('colour:blue');
 
+  // buttonTalk = createButton("Connect to Audio");
+  // buttonTalk.mouseClicked(connectToHiFiAudio);
+  // buttonTalk.size(100, 30);
+  // buttonTalk.position(10, 10);
+  // buttonTalk.style("font-family", "Bodoni");
+  // buttonTalk.style("font-size", "12px");
+  // buttonTalk.position(windowWidth/2, 100);
+  // buttonTalk.style('colour: green');
+  // buttonTalk.addClass('connectButton');
+
+  //audioDiv = createDiv(audio);
+
+  
+
   // socket.on('ballPos', function (v) {
 
 
@@ -246,4 +260,58 @@ Leap.loop(options, function (frame) {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+
+
+//Audio Connection 
+
+// We use this to change the text of the "Connect" button to "Connected", and to disable that button after clicking it.
+let connectButton = document.querySelector('.connectButton');
+
+async function connectToHiFiAudio(stream) {
+    // Disable the Connect button after the user clicks it so we don't double-connect.
+    connectButton.disabled = true;
+    connectButton.innerHTML = `Connecting...`;
+
+    // Get the audio media stream associated with the user's default audio input device.
+    let audioMediaStream;
+    try {
+        audioMediaStream = await navigator.mediaDevices.getUserMedia({ audio: HighFidelityAudio.getBestAudioConstraints(), video: false });
+    } catch (e) {
+        return;
+    }
+
+    // Set up the initial data for our user.
+    // They'll be standing at the origin, facing "forward".
+    let initialHiFiAudioAPIData = new HighFidelityAudio.HiFiAudioAPIData({
+        position: new HighFidelityAudio.Point3D({ "x": 0, "y": 0, "z": 0 }),
+        orientationEuler: new HighFidelityAudio.OrientationEuler3D({ "pitch": 0, "yaw": 0, "roll": 0 })
+    });
+
+    // Set up our `HiFiCommunicator` object, supplying our media stream and initial user data.
+    let hifiCommunicator = new HighFidelityAudio.HiFiCommunicator({
+        initialHiFiAudioAPIData: initialHiFiAudioAPIData
+    });
+    await hifiCommunicator.setInputAudioMediaStream(audioMediaStream);
+
+    // Connect to the HiFi Audio API server!
+    // Supply your own JWT here.
+    const HIFI_AUDIO_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJkNTQ4OWMyZC1hNzdiLTRlNTYtOTNjNi01NmJlYTNhMzY3NDQiLCJ1c2VyX2lkIjoiSG9zdC0wMSIsInNwYWNlX2lkIjoiNDFiOWJiODUtNzQ3OC00YWY4LThhMDktNWJjMWYyNzJhMTZmIiwic3RhY2siOiJhdWRpb25ldC1taXhlci1hcGktaG9iYnktMDUifQ.4LP69t7GypGOKKFEQ9SEet1xhRAGRSTpQYhsbrPfCz0";
+    try {
+        await hifiCommunicator.connectToHiFiAudioAPIServer(HIFI_AUDIO_JWT);
+    } catch (e) {
+        console.error(`Error connecting to High Fidelity:\n${e}`);
+        connectButton.disabled = false;
+        connectButton.innerHTML = `Connection error. Retry?`;
+        return;
+    }
+
+    // Show the user that we're connected by changing the text on the button.
+    connectButton.innerHTML = `Connected!`;
+
+    // Set the `srcObject` on our `audio` DOM element to the final, mixed audio stream from the High Fidelity Audio API Server.
+    document.querySelector(`.outputAudioEl`).srcObject = hifiCommunicator.getOutputAudioMediaStream();
+    // We explicitly call `play()` here because certain browsers won't play the newly-set stream automatically.
+    document.querySelector(`.outputAudioEl`).play();
 }
