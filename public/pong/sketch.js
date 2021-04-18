@@ -1,5 +1,5 @@
 //open and connect the input socket
-let socket = io('/pong');
+let socket = io('/play');
 
 //listen for the confirmation of connection 
 socket.on('connect', function(){
@@ -68,7 +68,8 @@ function draw() {
 
   let newBallPos = {
      ballX : ballXpos,
-     ballY : ballYpos
+     ballY : ballYpos,
+     pwd: password
   }
 
   socket.emit('ballPos', newBallPos);
