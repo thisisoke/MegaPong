@@ -38,8 +38,33 @@ pongInput.on('connection', function (socket) {
   console.log('new pong input client!: ' + socket.id);
 
   socket.on('ballPos', function (v) {
-  
+    
     pongInput.emit('ballPos', v);
+    //console.log(v);
+  })
+
+  socket.on('paddlePos', function (v) {
+  
+    pongInput.emit('paddlePos', v);
+    //console.log(v);
+  })
+
+  //listen for this client to disconnect
+  socket.on('disconnect', function () {
+    console.log('this pong client disconnected: ' + socket.id);
+  });
+
+});
+
+//pong
+var pInput = io.of('/p')
+//listen for anyone connecting
+pInput.on('connection', function (socket) {
+  console.log('new pong input client!: ' + socket.id);
+
+  socket.on('ballPos', function (v) {
+  
+    pInput.emit('ballPos', v);
     //console.log(v);
   })
 
