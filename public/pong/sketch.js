@@ -124,7 +124,13 @@ function draw() {
     ballY: ballYpos
   }
 
-  // socket.emit('ballPos', newBallPos);
+
+
+  var check = testBorder();
+  if (check == false) {
+    bar1X += xSpeed;
+
+      // socket.emit('ballPos', newBallPos);
 
   // socket.on('ballPos', function (v) {
 
@@ -134,10 +140,6 @@ function draw() {
   //   //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
 
   // });
-
-  var check = testBorder();
-  if (check == false) {
-    bar1X += xSpeed;
   } else {
     xSpeed = 0;
   }
