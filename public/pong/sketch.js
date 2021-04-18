@@ -124,16 +124,16 @@ function draw() {
     ballY: ballYpos
   }
 
-  socket.emit('ballPos', newBallPos);
+  // socket.emit('ballPos', newBallPos);
 
-  socket.on('ballPos', function (v) {
+  // socket.on('ballPos', function (v) {
 
 
-    ballXpos = v.ballX;
-    ballYpos = v.ballY;
-    //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
+  //   ballXpos = v.ballX;
+  //   ballYpos = v.ballY;
+  //   //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
 
-  });
+  // });
 
   var check = testBorder();
   if (check == false) {
