@@ -12,9 +12,12 @@
   </head>
   <body>
 
-   <button class="connectButton" style="width: 100px; height: 30px; position: absolute; left: 674.5px; top: 100px; font-family: Bodoni; font-size: 12px;;" onclick="connectToHiFiAudio()">Click to Connect</button>
-    <audio controls autoplay class="outputAudioEl" style="position: absolute; width: 150px; height: 75px; margin: 30px 0 0 0;"></audio>
-    <script src="sketch.js"></script>
-  
+    <div style="display: flex; position: absolute; margin: 30px; align-items: center; justify-content: space-around; width: 260px;bottom: 0px;">
 
+    <audio controls autoplay class="outputAudioEl" style="width: 150px"></audio>
+    <button class="connectButton" style="width: 100px; height: 30px; font-family: Bodoni; font-size: 12px;;" onclick="connectToHiFiAudio()">Click to Connect</button>
+    
+  </div>
+  
+  <script src="sketch.js"></script>
 </body></html>

@@ -18,8 +18,8 @@ var bar2X = -50;
 var bar2Y = 200;
 let buttonRight;
 
-var barWidth = 10;
-var barHeight = 60;
+var barWidth = 40;
+var barHeight = 100;
 
 var xPos = 200;
 var yPos = 200;
@@ -116,7 +116,20 @@ function setPaddleControlToRight() {
 function draw() {
  
   background(0);            // erase everything
+  
+
+  for (var i = 0; i < width; i += 10) {
+
+    stroke(39, 40, 41);
+    strokeWeight(1);
+  	line(i, 0, i, height);
+  	line(width, i, 0, i);
+    strokeWeight(0);
+  
+  }
+
   text("use your hand above the Leap Motion device", 20, 30);
+  
   if (ballXpos > width) {
     ballXspeed = -ballXspeed;
   }
@@ -161,9 +174,9 @@ function draw() {
 
   rect(bar1X, bar1Y, barWidth, barHeight);
   rect(bar2X, bar2Y, barWidth, barHeight);
-  ellipse(ballXpos, ballYpos, 10, 10);
-  hit = collideRectCircle(bar1X, bar1Y, barWidth, barHeight, ballXpos, ballYpos, 10);
-  hit2 = collideRectCircle(bar2X, bar2Y, barWidth, barHeight, ballXpos, ballYpos, 10);
+  ellipse(ballXpos, ballYpos, 30, 30);
+  hit = collideRectCircle(bar1X, bar1Y, barWidth, barHeight, ballXpos, ballYpos, 30);
+  hit2 = collideRectCircle(bar2X, bar2Y, barWidth, barHeight, ballXpos, ballYpos, 30);
   
 
   
