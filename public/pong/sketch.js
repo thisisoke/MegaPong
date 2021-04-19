@@ -33,6 +33,7 @@ var ballYpos = 200;
 
 var hit = false;
 var hit2 = false;
+var controledPaddle ;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -73,23 +74,30 @@ function setup() {
 
   socket.on('paddlePos', function (v) {
 
-    if (v.paddledControled == "Left") {
-      bar1X = v.barX1Pos;
-      bar1Y = v.barY1Pos;
+    // if (v.paddledControled == "Left") {
+    //   controledPaddle = "Left";
+    //   bar1X = v.barX1Pos;
+    //   bar1Y = v.barY1Pos;
 
-    } else if (v.paddledControled == "Right") {
+    // } else if (v.paddledControled == "Right") {
+    //   controledPaddle = "Right";
 
-      bar2X = v.barX2Pos;
-      bar2Y = v.barY2Pos;
+    //   bar2X = v.barX2Pos;
+    //   bar2Y = v.barY2Pos;
 
-    }
+    // }
+
+      bar1X = v.RPaddle.barX1Pos;
+      bar1Y = v.RPaddle.barY1Pos;
+      bar2X = v.LPaddle.barX2Pos;
+      bar2Y = v.LPaddle.barY2Pos;
 
   });
 
 
 }
 
-var controledPaddle = "Right";
+
 function setPaddleControlToLeft() {
 
   controledPaddle = "Left";
@@ -195,25 +203,45 @@ function draw() {
 
   let newBarPos;
 
-  if (controledPaddle == "Left") {
-
-    newBarPos = {
+  newBarPos = {
+    RPaddle: {
       paddledControled: controledPaddle,
       barX1Pos: bar1X,
       barY1Pos: bar1Y,
-    }
-
-  } else if (controledPaddle == "Right") {
-
-    newBarPos = {
+    },
+    LPaddle: {
       paddledControled: controledPaddle,
       barX2Pos: bar2X,
       barY2Pos: bar2Y,
-
     }
-
-
   }
+
+  // if (controledPaddle == "Left") {
+
+  //   newBarPos = {
+  //     RPaddle: {
+  //       paddledControled: controledPaddle,
+  //       barX1Pos: bar1X,
+  //       barY1Pos: bar1Y,
+  //     },
+  //     LPaddle: {
+  //       paddledControled: controledPaddle,
+  //       barX1Pos: bar2X,
+  //       barY1Pos: bar2Y,
+  //     }
+  //   }
+
+  // } else if (controledPaddle == "Right") {
+
+  //   newBarPos = {
+  //     paddledControled: controledPaddle,
+  //     barX2Pos: bar2X,
+  //     barY2Pos: bar2Y,
+
+  //   }
+
+
+  // }
 
 
   socket.emit('paddlePos', newBarPos);
