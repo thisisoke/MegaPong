@@ -45,7 +45,7 @@ function setup() {
   bar2X = windowWidth - 50;
 
   //button Creation
-  buttonLeft = createButton("Left Paddle");
+  buttonLeft = createButton("Player 1");
   buttonLeft.mouseClicked(setPaddleControlToLeft);
   buttonLeft.size(100, 30);
   buttonLeft.style("font-family", "Bodoni");
@@ -53,7 +53,7 @@ function setup() {
   buttonLeft.position((width/4)-50, 100);
   buttonLeft.style('colour:blue');
 
-  buttonLeft = createButton("Right Paddle");
+  buttonLeft = createButton("Play 2");
   buttonLeft.mouseClicked(setPaddleControlToRight);
   buttonLeft.size(100, 30);
   buttonLeft.style("font-family", "Bodoni");
