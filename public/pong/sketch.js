@@ -31,6 +31,9 @@ var ballYspeed = 6;
 var ballXpos = 300;
 var ballYpos = 200;
 
+var hit = false;
+var hit2 = false;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(0);
@@ -44,34 +47,20 @@ function setup() {
   buttonLeft = createButton("Left Paddle");
   buttonLeft.mouseClicked(setPaddleControlToLeft);
   buttonLeft.size(100, 30);
-  buttonLeft.position(10, 10);
   buttonLeft.style("font-family", "Bodoni");
   buttonLeft.style("font-size", "12px");
-  buttonLeft.position(100, 100);
+  buttonLeft.position((width/4)-50, 100);
   buttonLeft.style('colour:blue');
 
   buttonLeft = createButton("Right Paddle");
   buttonLeft.mouseClicked(setPaddleControlToRight);
   buttonLeft.size(100, 30);
-  buttonLeft.position(10, 10);
   buttonLeft.style("font-family", "Bodoni");
   buttonLeft.style("font-size", "12px");
-  buttonLeft.position(windowWidth - 200, 100);
+  buttonLeft.position(((width/4)*3)-50, 100);
   buttonLeft.style('colour:blue');
 
-  // buttonTalk = createButton("Connect to Audio");
-  // buttonTalk.mouseClicked(connectToHiFiAudio);
-  // buttonTalk.size(100, 30);
-  // buttonTalk.position(10, 10);
-  // buttonTalk.style("font-family", "Bodoni");
-  // buttonTalk.style("font-size", "12px");
-  // buttonTalk.position(windowWidth/2, 100);
-  // buttonTalk.style('colour: green');
-  // buttonTalk.addClass('connectButton');
 
-  //audioDiv = createDiv(audio);
-
-  
 
   // socket.on('ballPos', function (v) {
 
@@ -95,7 +84,7 @@ function setup() {
 
     }
 
-    });
+  });
 
 
 }
@@ -114,22 +103,34 @@ function setPaddleControlToRight() {
 }
 
 function draw() {
- 
-  background(0);            // erase everything
-  
 
+  background(0);            // erase everything
+
+  // draw grid
   for (var i = 0; i < width; i += 10) {
 
     stroke(39, 40, 41);
     strokeWeight(1);
-  	line(i, 0, i, height);
-  	line(width, i, 0, i);
+    line(i, 0, i, height);
+    line(width, i, 0, i);
     strokeWeight(0);
-  
+
   }
 
   text("use your hand above the Leap Motion device", 20, 30);
-  
+
+  //Draw Middle Net
+  let dashes = 6;
+  let spaceQuo = height/dashes;
+  let netXPos = width/2; 
+  for (var i = 0; i < dashes; i ++) {
+    strokeWeight(25);
+    stroke(200);
+    strokeCap(SQUARE);
+    line(netXPos, (spaceQuo * i), netXPos, (spaceQuo*i)+100);
+    strokeWeight(0);
+  }
+
   if (ballXpos > width) {
     ballXspeed = -ballXspeed;
   }
@@ -157,30 +158,30 @@ function draw() {
   if (check == false) {
     bar1X += xSpeed;
 
-      // socket.emit('ballPos', newBallPos);
+    // socket.emit('ballPos', newBallPos);
 
-  // socket.on('ballPos', function (v) {
+    // socket.on('ballPos', function (v) {
 
 
-  //   ballXpos = v.ballX;
-  //   ballYpos = v.ballY;
-  //   //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
+    //   ballXpos = v.ballX;
+    //   ballYpos = v.ballY;
+    //   //console.log(v.ballX, v.ballY, ballXpos, ballYpos )
 
-  // });
+    // });
   } else {
     xSpeed = 0;
   }
-  
+
 
   rect(bar1X, bar1Y, barWidth, barHeight);
   rect(bar2X, bar2Y, barWidth, barHeight);
-  ellipse(ballXpos, ballYpos, 30, 30);
+  ellipse(ballXpos, ballYpos, 30);
   hit = collideRectCircle(bar1X, bar1Y, barWidth, barHeight, ballXpos, ballYpos, 30);
   hit2 = collideRectCircle(bar2X, bar2Y, barWidth, barHeight, ballXpos, ballYpos, 30);
-  
 
-  
-  
+
+
+
 
   if (hit == true) {
     ballXspeed = -ballXspeed;
@@ -189,7 +190,7 @@ function draw() {
     ballXspeed = -ballXspeed;
   }
 
-  
+
 
 
   let newBarPos;
@@ -283,48 +284,48 @@ function windowResized() {
 let connectButton = document.querySelector('.connectButton');
 
 async function connectToHiFiAudio(stream) {
-    // Disable the Connect button after the user clicks it so we don't double-connect.
-    connectButton.disabled = true;
-    connectButton.innerHTML = `Connecting...`;
+  // Disable the Connect button after the user clicks it so we don't double-connect.
+  connectButton.disabled = true;
+  connectButton.innerHTML = `Connecting...`;
 
-    // Get the audio media stream associated with the user's default audio input device.
-    let audioMediaStream;
-    try {
-        audioMediaStream = await navigator.mediaDevices.getUserMedia({ audio: HighFidelityAudio.getBestAudioConstraints(), video: false });
-    } catch (e) {
-        return;
-    }
+  // Get the audio media stream associated with the user's default audio input device.
+  let audioMediaStream;
+  try {
+    audioMediaStream = await navigator.mediaDevices.getUserMedia({ audio: HighFidelityAudio.getBestAudioConstraints(), video: false });
+  } catch (e) {
+    return;
+  }
 
-    // Set up the initial data for our user.
-    // They'll be standing at the origin, facing "forward".
-    let initialHiFiAudioAPIData = new HighFidelityAudio.HiFiAudioAPIData({
-        position: new HighFidelityAudio.Point3D({ "x": 0, "y": 0, "z": 0 }),
-        orientationEuler: new HighFidelityAudio.OrientationEuler3D({ "pitch": 0, "yaw": 0, "roll": 0 })
-    });
+  // Set up the initial data for our user.
+  // They'll be standing at the origin, facing "forward".
+  let initialHiFiAudioAPIData = new HighFidelityAudio.HiFiAudioAPIData({
+    position: new HighFidelityAudio.Point3D({ "x": 0, "y": 0, "z": 0 }),
+    orientationEuler: new HighFidelityAudio.OrientationEuler3D({ "pitch": 0, "yaw": 0, "roll": 0 })
+  });
 
-    // Set up our `HiFiCommunicator` object, supplying our media stream and initial user data.
-    let hifiCommunicator = new HighFidelityAudio.HiFiCommunicator({
-        initialHiFiAudioAPIData: initialHiFiAudioAPIData
-    });
-    await hifiCommunicator.setInputAudioMediaStream(audioMediaStream);
+  // Set up our `HiFiCommunicator` object, supplying our media stream and initial user data.
+  let hifiCommunicator = new HighFidelityAudio.HiFiCommunicator({
+    initialHiFiAudioAPIData: initialHiFiAudioAPIData
+  });
+  await hifiCommunicator.setInputAudioMediaStream(audioMediaStream);
 
-    // Connect to the HiFi Audio API server!
-    // Supply your own JWT here.
-    const HIFI_AUDIO_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJkNTQ4OWMyZC1hNzdiLTRlNTYtOTNjNi01NmJlYTNhMzY3NDQiLCJ1c2VyX2lkIjoiSG9zdC0wMSIsInNwYWNlX2lkIjoiNDFiOWJiODUtNzQ3OC00YWY4LThhMDktNWJjMWYyNzJhMTZmIiwic3RhY2siOiJhdWRpb25ldC1taXhlci1hcGktaG9iYnktMDUifQ.4LP69t7GypGOKKFEQ9SEet1xhRAGRSTpQYhsbrPfCz0";
-    try {
-        await hifiCommunicator.connectToHiFiAudioAPIServer(HIFI_AUDIO_JWT);
-    } catch (e) {
-        console.error(`Error connecting to High Fidelity:\n${e}`);
-        connectButton.disabled = false;
-        connectButton.innerHTML = `Connection error. Retry?`;
-        return;
-    }
+  // Connect to the HiFi Audio API server!
+  // Supply your own JWT here.
+  const HIFI_AUDIO_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiJkNTQ4OWMyZC1hNzdiLTRlNTYtOTNjNi01NmJlYTNhMzY3NDQiLCJ1c2VyX2lkIjoiSG9zdC0wMSIsInNwYWNlX2lkIjoiNDFiOWJiODUtNzQ3OC00YWY4LThhMDktNWJjMWYyNzJhMTZmIiwic3RhY2siOiJhdWRpb25ldC1taXhlci1hcGktaG9iYnktMDUifQ.4LP69t7GypGOKKFEQ9SEet1xhRAGRSTpQYhsbrPfCz0";
+  try {
+    await hifiCommunicator.connectToHiFiAudioAPIServer(HIFI_AUDIO_JWT);
+  } catch (e) {
+    console.error(`Error connecting to High Fidelity:\n${e}`);
+    connectButton.disabled = false;
+    connectButton.innerHTML = `Connection error. Retry?`;
+    return;
+  }
 
-    // Show the user that we're connected by changing the text on the button.
-    connectButton.innerHTML = `Connected!`;
+  // Show the user that we're connected by changing the text on the button.
+  connectButton.innerHTML = `Connected!`;
 
-    // Set the `srcObject` on our `audio` DOM element to the final, mixed audio stream from the High Fidelity Audio API Server.
-    document.querySelector(`.outputAudioEl`).srcObject = hifiCommunicator.getOutputAudioMediaStream();
-    // We explicitly call `play()` here because certain browsers won't play the newly-set stream automatically.
-    document.querySelector(`.outputAudioEl`).play();
+  // Set the `srcObject` on our `audio` DOM element to the final, mixed audio stream from the High Fidelity Audio API Server.
+  document.querySelector(`.outputAudioEl`).srcObject = hifiCommunicator.getOutputAudioMediaStream();
+  // We explicitly call `play()` here because certain browsers won't play the newly-set stream automatically.
+  document.querySelector(`.outputAudioEl`).play();
 }
