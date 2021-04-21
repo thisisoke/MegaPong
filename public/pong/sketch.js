@@ -35,6 +35,14 @@ var hit = false;
 var hit2 = false;
 var controledPaddle ;
 
+let img;
+
+function preload() {
+
+  img = loadImage('assets/MEGA-PONG-LOGO_1.png');
+
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(0);
@@ -138,6 +146,9 @@ function draw() {
     line(netXPos, (spaceQuo * i), netXPos, (spaceQuo*i)+100);
     strokeWeight(0);
   }
+
+  imageMode(CENTER);
+  image(img, width/2, (height/5)*4.2);
 
   if (ballXpos > width) {
     ballXspeed = -ballXspeed;
